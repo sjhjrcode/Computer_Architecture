@@ -1,60 +1,10 @@
 m255
 K4
 z2
-!s11f vlog 2020.1 2020.02, Feb 28 2020
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 d/home/sjhjrok/Documents/ecen4243S23/lab0
-vFSM
-Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
-Z2 !s110 1674409531
-!i10b 1
-!s100 ;9UlQO`CZ6V49mWLXegBc0
-Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
-Iz4f?=ccMTe@la@k_TH4122
-Z4 VDg1SIo80bB@j0V0VzS_@n1
-S1
-R0
-Z5 w1674408742
-8FSM.sv
-FFSM.sv
-!i122 0
-L0 1 41
-Z6 OV;L;2020.1;71
-r1
-!s85 0
-31
-Z7 !s108 1674409531.000000
-!s107 FSM_tb.sv|FSM.sv|
-Z8 !s90 -reportprogress|300|FSM.sv|FSM_tb.sv|
-!i113 1
-Z9 tCvgOpt 0
-n@f@s@m
-vstimulus
-R1
-R2
-!i10b 1
-!s100 k_ZVFkNbCjP]^NaBm`GW[2
-R3
-IN7l`aO]B=;GUL;:OzCWX:1
-R4
-S1
-R0
-R5
-8FSM_tb.sv
-FFSM_tb.sv
-!i122 0
-L0 1 46
-R6
-r1
-!s85 0
-31
-R7
-Z10 !s107 FSM_tb.sv|FSM.sv|
-R8
-!i113 1
-R9
+d/home/sjhjrok/MEGA/School/Computer_Architecture/Lab0
