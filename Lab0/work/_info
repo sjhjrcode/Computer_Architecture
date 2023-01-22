@@ -1,10 +1,59 @@
 m255
 K4
 z2
+!s11f vlog 2020.1 2020.02, Feb 28 2020
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-d/home/sjhjrok/MEGA/School/Computer_Architecture/Lab0
+Z0 d/home/sjhjrok/MEGA/School/Computer_Architecture/Lab0
+vregfile
+Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
+Z2 !s110 1674423272
+!i10b 1
+!s100 ]jU]1YV]dCa3_4Z_jHbAV2
+Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
+I_gmk=hSm0`FLWD]C?X9gm0
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+S1
+R0
+w1674422240
+8regfile.sv
+Fregfile.sv
+!i122 0
+L0 1 24
+Z5 OV;L;2020.1;71
+r1
+!s85 0
+31
+Z6 !s108 1674423272.000000
+!s107 regfile_tb.sv|regfile.sv|
+Z7 !s90 -reportprogress|300|regfile.sv|regfile_tb.sv|
+!i113 1
+Z8 tCvgOpt 0
+vstimulus
+R1
+R2
+!i10b 1
+!s100 BG?[cQ;Ue5Lhlh>Ia8RP83
+R3
+IXgRnzjICcQ@3=N7iTRzOC2
+R4
+S1
+R0
+w1674423259
+8regfile_tb.sv
+Fregfile_tb.sv
+!i122 0
+L0 1 53
+R5
+r1
+!s85 0
+31
+R6
+Z9 !s107 regfile_tb.sv|regfile.sv|
+R7
+!i113 1
+R8

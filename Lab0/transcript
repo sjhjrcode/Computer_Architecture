@@ -1,15 +1,24 @@
 # do regfile.do
 # Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 12:41:59 on Jan 22,2023
-# vlog -reportprogress 300 regfile.sv 
+# Start time: 15:34:32 on Jan 22,2023
+# vlog -reportprogress 300 regfile.sv regfile_tb.sv 
 # -- Compiling module regfile
-# ** Error: regfile.sv(16): (vlog-2730) Undefined variable: 'out'.
-# ** Error: regfile.sv(16): LHS in procedural continuous assignment may not be a net: out.
-# ** Error: (vlog-13009) regfile.sv(17): near ";": Unexpected '[' following the name of a task.
-# End time: 12:41:59 on Jan 22,2023, Elapsed time: 0:00:00
-# Errors: 3, Warnings: 0
-# ** Error: /home/sjhjrok/intelFPGA/20.1/modelsim_ase/linuxaloem/vlog failed.
-# Error in macro ./regfile.do line 30
-# /home/sjhjrok/intelFPGA/20.1/modelsim_ase/linuxaloem/vlog failed.
-#     while executing
-# "vlog regfile.sv"
+# -- Compiling module stimulus
+# 
+# Top level modules:
+# 	stimulus
+# End time: 15:34:32 on Jan 22,2023, Elapsed time: 0:00:00
+# Errors: 0, Warnings: 0
+# vsim -voptargs="+acc" work.stimulus 
+# Start time: 15:34:32 on Jan 22,2023
+# Loading sv_std.std
+# Loading work.stimulus
+# Loading work.regfile
+# .main_pane.list.interior.cs.body
+# .main_pane.wave.interior.cs.body.pw.wf
+# ** Note: $finish    : regfile_tb.sv(34)
+#    Time: 500 ps  Iteration: 0  Instance: /stimulus
+# 1
+# Break in Module stimulus at regfile_tb.sv line 34
+# End time: 15:36:21 on Jan 22,2023, Elapsed time: 0:01:49
+# Errors: 0, Warnings: 0

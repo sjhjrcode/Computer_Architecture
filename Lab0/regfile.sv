@@ -10,13 +10,15 @@ module regfile (input logic         clk,
    // read two ports combinationally
    // write third port on rising edge of clock
    // register 0 hardwired to 0
-   always @ (posedge clk) 
+   always_ff @ (posedge clk) 
    begin
-      if(we3)
-         assign out = ra1 & ra2;
-         rd1 = rf[out];
-      else
+      if(we3) 
+         //assign out = ra1 & ra2;
+         rd1 = rf[ra1 & ra2];
+      
+      else  
          rd2 = rf[0];
+      
    end   
    
 endmodule // regfile
