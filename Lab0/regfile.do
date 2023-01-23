@@ -56,7 +56,7 @@ add wave -hex -r /stimulus/*
 
 -- Set Wave Output Items 
 TreeUpdate [SetDefaultTree]
-WaveRestoreZoom {0 ps} {75 ns}
+WaveRestoreZoom {0 ps} {500 ps}
 configure wave -namecolwidth 150
 configure wave -valuecolwidth 100
 configure wave -justifyvalue left
@@ -67,6 +67,6 @@ configure wave -rowmargin 4
 configure wave -childrowmargin 2
 
 -- Run the Simulation
-run 120us
+run 500ps
 
 
