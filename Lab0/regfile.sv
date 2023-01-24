@@ -4,8 +4,7 @@ module regfile (input logic         clk,
 		input logic [31:0]  wd3, 
 		output logic [31:0] rd1, rd2);
    
-   logic [63:0] 		    rf[31:0];
-   
+   logic [31:0] 		    rf[31:0];
    // three ported register file
    // read two ports combinationally
    // write third port on rising edge of clock
@@ -14,17 +13,17 @@ module regfile (input logic         clk,
    begin
       if(we3) begin
          rf[wa3]<=wd3;
-         assign rd1 = rf[ra1];
-         assign rd2 = rf[ra2];  
-
-
+ 
       end
-         //assign out = ra1 & ra2;
-
+ 
       else  begin
-         assign rd1 = rf[0];
-         assign rd2 = rf[0];  
+         rf[0]<=32'b0;  
       end
+      
+      assign rd1 = (ra1==0) ? 32'b0: rf[ra1];
+      assign rd2 = (ra2==0) ? 32'b0: rf[ra2]; 
+         //assign out = ra1 & ra2;
+     
    end   
    
 endmodule // regfile

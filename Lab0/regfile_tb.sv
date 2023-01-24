@@ -38,21 +38,62 @@ module stimulus ();
    always 
      begin
 	desc3 = handle3;
-	#5 $fdisplay(desc3, "Write 1: %b Write 2: %b  Write Enable: %b Wide Data: %b|| Registar 1: %b Registar 2: %b", 
-		     ra1, ra2, wa3, wd3, rd1, rd2);
+	#5 $fdisplay(desc3, "Write Enable: %b Read 1: %b Read 2: %b  Write Address: %b Wide Data: %b|| Register 0: %b Register 1: %b", 
+		     we3,ra1, ra2, wa3, wd3, rd1, rd2);
      end   
    
    initial 
      begin      
 	#0  we3 = 1'b0;
-	#12 we3 = 1'b1;
+     #0 ra2 = 5'b00000;
+	#0 ra1 = 5'b00000;
      #12 wd3 = 32'b11111;
-     #12 wa3 = 5'b00000;
-     #12 ra1 = 5'b00000;
+     #12 wa3 = 5'b10000;
+     #12 ra1 = 5'b10000;
      #12 wa3 = 5'b00001;
+     #12 we3 = 1'b1;
      #12 ra1 = 5'b00001;
      #12 wa3 = 5'b00010;
      #12 ra1 = 5'b00010;
+     
+     #12 wd3 = 32'b11001;
+     #12 wa3 = 5'b00001;
+     #12 ra1 = 5'b00010;
+     #12 ra1 = 5'b00001;
+	#12 we3 = 1'b0;
+     #12 ra1 = 5'b00000;
+     #12 ra1 = 5'b10000;
+     #12 wd3 = 32'b00000;
+
+
+     #12 ra1 = 5'b00000;
+     #12 ra2 = 5'b00000;
+     #12 wd3 = 32'b00000;
+     #12 wa3 = 5'b00000;	
+     #12 we3 = 1'b0;
+     #12 wa3 = 5'b01000;
+     #12 wd3 = 32'b01000;
+     #12 we3 = 1'b1;
+     #12 we3 = 1'b0;
+     #12 wa3 = 5'b10000;
+     #12 wd3 = 32'b10000;
+     #12 we3 = 1'b1;
+     #12 we3 = 1'b0;
+     #12 wa3 = 5'b00000;
+     #12 wd3 = 32'b00000;
+     #12 ra1 = 5'b01000;
+     #0 ra2 = 5'b10000;
+     #12 we3 = 1'b1;
+     #12 wd3 = 32'b00110;
+     #12 ra1 = 5'b00000;
+     #12 we3 = 1'b0;
+     #12 we3 = 1'b1;
+     #12 we3 = 1'b0;
+     end
+
+endmodule // regfile_tb
+
+/*
      #12 wa3 = 5'b00100;
      #12 ra1 = 5'b00100;
      #12 wa3 = 5'b01000;
@@ -95,11 +136,4 @@ module stimulus ();
      #12 ra2 = 5'b10110;
      #12 ra2 = 5'b11001;
      #12 ra2 = 5'b11011;
-	#12 we3 = 1'b0;
-     #12 wd3 = 32'b00000;	
-
-
-     end
-
-endmodule // regfile_tb
-
+*/

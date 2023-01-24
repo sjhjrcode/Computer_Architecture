@@ -1,59 +1,10 @@
 m255
 K4
 z2
-!s11f vlog 2020.1 2020.02, Feb 28 2020
 13
 !s112 1.1
 !i10d 8192
 !i10e 25
 !i10f 100
 cModel Technology
-Z0 d/home/sjhjrok/MEGA/School/Computer_Architecture/Lab0
-vregfile
-Z1 DXx6 sv_std 3 std 0 22 VYECXdT12H8WgbUP_5Y6:3
-Z2 !s110 1674513565
-!i10b 1
-!s100 _:OhgUH96]o^Q;>^ZZg=[2
-Z3 !s11b Dg1SIo80bB@j0V0VzS_@n1
-IAodJA3GzQXN6OPk8BSP`L3
-Z4 VDg1SIo80bB@j0V0VzS_@n1
-S1
-R0
-w1674513331
-8regfile.sv
-Fregfile.sv
-!i122 0
-L0 1 30
-Z5 OV;L;2020.1;71
-r1
-!s85 0
-31
-Z6 !s108 1674513565.000000
-!s107 regfile_tb.sv|regfile.sv|
-Z7 !s90 regfile.sv|regfile_tb.sv|
-!i113 1
-Z8 tCvgOpt 0
-vstimulus
-R1
-R2
-!i10b 1
-!s100 Je8JnUd5O3H58MDXJin021
-R3
-IP^YPIE4I@8OeoOP@PKFV03
-R4
-S1
-R0
-w1674513561
-8regfile_tb.sv
-Fregfile_tb.sv
-!i122 0
-L0 1 104
-R5
-r1
-!s85 0
-31
-R6
-Z9 !s107 regfile_tb.sv|regfile.sv|
-R7
-!i113 1
-R8
+dC:/Users/stehowe/Documents/Computer_Architecture/Lab0
