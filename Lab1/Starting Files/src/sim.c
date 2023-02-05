@@ -94,6 +94,30 @@ int r_process(char* i_) {
   }
 
   /* Add other data instructions here */ 
+  if(!strcmp(d_opcode,"0110011")) {
+    printf("--- This is an SUB instruction. \n");
+    SUB(Rd, Rs1, Rs2, Funct3);
+    return 0;
+  }
+
+  if(!strcmp(d_opcode,"0110011")) {
+    printf("--- This is an XOR instruction. \n");
+    XOR(Rd, Rs1, Rs2, Funct3);
+    return 0;
+  }
+
+  if(!strcmp(d_opcode,"0110011")) {
+    printf("--- This is an OR instruction. \n");
+    OR(Rd, Rs1, Rs2, Funct3);
+    return 0;
+  }
+
+  if(!strcmp(d_opcode,"0110011")) {
+    printf("--- This is an AND instruction. \n");
+    AND(Rd, Rs1, Rs2, Funct3);
+    return 0;
+  }
+
 
   return 1;	
 }
@@ -113,16 +137,20 @@ int i_process(char* i_) {
   char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
   char imm[13]; imm[12] = '\0';
+  
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
     rd[i] = i_[31-11+i];
   }
+
   for(int i = 0; i < 12; i++) {
     imm[i] = i_[31-31+i];
   }
+
   for(int i = 0; i < 3; i++) {
     funct3[i] = i_[31-14+i];
   }
+
   int Rs1 = bchar_to_int(rs1);
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
@@ -137,6 +165,16 @@ int i_process(char* i_) {
   if(!strcmp(d_opcode,"0010011")) {
     printf("--- This is an ADDI instruction. \n");
     ADDI(Rd, Rs1, Imm, Funct3);
+    return 0;
+  }	  
+    if(!strcmp(d_opcode,"0010011")) {
+    printf("--- This is an XORI instruction. \n");
+    XORI(Rd, Rs1, Imm, Funct3);
+    return 0;
+  }	  
+    if(!strcmp(d_opcode,"0010011")) {
+    printf("--- This is an ORI instruction. \n");
+    ORI(Rd, Rs1, Imm, Funct3);
     return 0;
   }	  
 
@@ -192,12 +230,25 @@ int b_process(char* i_) {
 
   /* Add branch instructions here */
 
-  /* This is an Add Immediate Instruciton */
+  /* This is an BNE Immediate Instruciton */
   if(!strcmp(d_opcode,"1100011")) {
     printf("--- This is an BNE instruction. \n");
     BNE(Rs1, Rs2, Imm, Funct3);
     return 0;
   }	    
+  /* This is an Add Instruciton 
+  if(!strcmp(d_opcode,"0110011")) {
+    printf("--- This is an Add instruction. \n");
+    ADD(Rs1, Rs2, Imm, Funct3);
+    return 0;
+  }	  
+    /* This is an Add Immediate Instruciton 
+  if(!strcmp(d_opcode,"0010011")) {
+    printf("--- This is an ADDI instruction. \n");
+    BNE(Rs1, Rs2, Imm, Funct3);
+    return 0;
+  }	  
+*/
 
   return 1;
 
