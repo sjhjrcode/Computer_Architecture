@@ -204,32 +204,36 @@ int AUIPC (int Rd, int Rs1, int Imm, int Funct3) {
 //int SH (char* i_);
 //int SW (char* i_);
 
-/*
+
 
 int SB (int Rs1, int Rs2, int Imm, int Funct3) {
 
-  uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
-  mem_write_32( address_data,  SIGNEXT(CURRENT_STATE.REGS[Rs2],8));
+  uint32_t address_data = CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12);
+  uint32_t write = CURRENT_STATE.REGS[Rs2];
+  write << 24;
+  mem_write_32( address_data,  write);
   return 0;
   
 }
 
 int SH (int Rs1, int Rs2, int Imm, int Funct3) {
 
-  uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),16);
-  mem_write_32( address_data,  SIGNEXT(CURRENT_STATE.REGS[Rs2],16));
+  uint32_t address_data = CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12);
+  uint32_t write = CURRENT_STATE.REGS[Rs2];
+  write << 16;
+  mem_write_32( address_data,  write);
   return 0;
   
 }
 
 int SW (int Rs1, int Rs2, int Imm, int Funct3) {
 
-  uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),32);
-  mem_write_32( address_data,  SIGNEXT(CURRENT_STATE.REGS[Rs2],32));
+  uint32_t address_data = (CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12));
+  mem_write_32( address_data,  CURRENT_STATE.REGS[Rs2]);
   return 0;
   
 }
-*/
+
 
 // R instruction
 //int SUB (char* i_);
@@ -272,7 +276,7 @@ int SRL (int Rd, int Rs1, int Rs2, int Funct3) {
 int SRA (int Rd, int Rs1, int Rs2, int Funct3) {
 
   int cur = 0;
-  cur = SIGNEXT((CURRENT_STATE.REGS[Rs1] >> CURRENT_STATE.REGS[Rs2]),5);
+  cur = SIGNEXT((CURRENT_STATE.REGS[Rs1] >> (CURRENT_STATE.REGS[Rs2]>>27)),27);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 
@@ -409,11 +413,30 @@ int BGEU (int Rs1, int Rs2, int Imm, int Funct3) {
 
 
 // I instruction
-int JALR (char* i_);
+//int JALR (char* i_);
+
+int JALR (int Rd, int Rs1, int Imm, int Funct3) {
+
+    NEXT_STATE.REGS[Rd] = (CURRENT_STATE.PC+4);
+    NEXT_STATE.PC = CURRENT_STATE.REGS[Rs1] + (SIGNEXT(Imm,12));
+
+  return 0;
+
+}
+
 
 
 // J instruction
-int JAL (char* i_);
+//int JAL (char* i_);
+
+int JAL (int Rd, int Rs1, int Imm, int Funct3) {
+
+    NEXT_STATE.REGS[Rd] = (CURRENT_STATE.PC+4);
+    NEXT_STATE.PC = (CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,12));
+
+  return 0;
+
+}
 
 int ECALL (char* i_){return 0;}
 

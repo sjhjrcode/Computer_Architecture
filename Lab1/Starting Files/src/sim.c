@@ -79,14 +79,14 @@ int r_process(char* i_) {
   for(int i = 0; i < 3; i++) {
     funct3[i] = i_[31-14+i];
   }
-  for(int i = 0; i < 3; i++) {
-    funct7[i] = i_[31-14+i];
+  for(int i = 0; i < 7; i++) {
+    funct7[i] = i_[31-25+i];
   }
   int Rs1 = bchar_to_int(rs1);
   int Rs2 = bchar_to_int(rs2);		   
   int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
-  int Funct7 = bchar_to_int(funct3);
+  int Funct7 = bchar_to_int(funct7);
   printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Rd = %d\n Funct3 = %d\n Funct7 = %d\n\n",
 	  d_opcode, Rs1, Rs2, Rd, Funct3,Funct7);
   printf("\n");
@@ -99,7 +99,7 @@ int r_process(char* i_) {
   }
 
   /* Add other data instructions here */ 
-  if((!strcmp(d_opcode,"0110011"))&&(Funct3==0)&&(Funct7==32)) {
+  if((!strcmp(d_opcode,"0110011"))&&(Funct3==0)&&(Funct7==4)) {
     printf("--- This is an SUB instruction. \n");
     SUB(Rd, Rs1, Rs2, Funct3);
     return 0;
@@ -348,6 +348,7 @@ int u_process(char* i_) {
 
   /* This function execute U type instructions */
   //I just copied and pasted this I have no clue
+
   char d_opcode[8];
   d_opcode[0] = i_[31-6]; 
   d_opcode[1] = i_[31-5]; 
@@ -357,53 +358,44 @@ int u_process(char* i_) {
   d_opcode[5] = i_[31-1]; 
   d_opcode[6] = i_[31-0]; 
   d_opcode[7] = '\0';
-  char rs1[6]; rs1[5] = '\0';
-  char rs2[6]; rs2[5] = '\0';		     
+  char rs1[6]; rs1[5] = '\0';		   
+  char rd[6]; rd[5] = '\0';
   char funct3[4]; funct3[3] = '\0';
-  char imm[13]; 
+  char imm[13]; imm[12] = '\0';
+  
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
-    rs2[i] = i_[31-24+i];                
+    rd[i] = i_[31-11+i];
   }
-  // Old-fashioned method but works :)
-  imm[0] = i_[31-31]; 
-  imm[1] = i_[31-7]; 
-  imm[2] = i_[31-30]; 
-  imm[3] = i_[31-29];
-  imm[4] = i_[31-28]; 
-  imm[5] = i_[31-27]; 
-  imm[6] = i_[31-26];
-  imm[7] = i_[31-25];
-  imm[8] = i_[31-11];
-  imm[9] = i_[31-10];
-  imm[10] = i_[31-9];
-  imm[11] = i_[31-8];
-  imm[12] = '\0';  
+
+  for(int i = 0; i < 12; i++) {
+    imm[i] = i_[31-31+i];
+  }
 
   for(int i = 0; i < 3; i++) {
     funct3[i] = i_[31-14+i];
   }
+
   int Rs1 = bchar_to_int(rs1);
-  int Rs2 = bchar_to_int(rs2);  
+  int Rd = bchar_to_int(rd);
   int Funct3 = bchar_to_int(funct3);
   int Imm = bchar_to_int(imm);
-  printf ("Opcode = %s\n Rs1 = %d\n Rs2 = %d\n Imm = %d\n Funct3 = %d\n\n",
-	  d_opcode, Rs1, Rs2, Imm, Funct3);
-  printf("\n");    
-
+  printf ("Opcode = %s\n Rs1 = %d\n Imm = %d\n Rd = %d\n Funct3 = %d\n\n",
+	  d_opcode, Rs1, Imm, Rd, Funct3);
+  printf("\n");
   /* Add branch instructions here */
 
   /* This is an lui Immediate Instruciton */
   if(!strcmp(d_opcode,"0110111")) {
     printf("--- This is an LUI instruction. \n");
-    LUI(Rs1, Rs2, Imm, Funct3);
+    LUI(Rd, Rs1, Imm, Funct3);
     return 0;
   }	    
 
     /* This is an AUIPC Immediate Instruciton */
   if(!strcmp(d_opcode,"0010111")) {
     printf("--- This is an AUIPC instruction. \n");
-    AUIPC(Rs1, Rs2, Imm, Funct3);
+    AUIPC(Rd, Rs1, Imm, Funct3);
     return 0;
   }	  
   /* Add U instructions here */ 
