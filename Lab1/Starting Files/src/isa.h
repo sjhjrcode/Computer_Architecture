@@ -181,7 +181,7 @@ int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
 // U Instruction
 //int AUIPC (char* i_);
 //int LUI (char* i_);
-int LUI (int Rd, int Rs1, int Imm, int Funct3) {
+int LUI (int Rd, int Imm) {
 
   int cur = 0;
   cur = SIGNEXT(Imm,12)<<12;
@@ -189,7 +189,7 @@ int LUI (int Rd, int Rs1, int Imm, int Funct3) {
   return 0;
 
 }
-int AUIPC (int Rd, int Rs1, int Imm, int Funct3) {
+int AUIPC (int Rd, int Imm) {
 
   int cur = 0;
   cur = (CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,12)<<12);
@@ -208,7 +208,7 @@ int AUIPC (int Rd, int Rs1, int Imm, int Funct3) {
 
 int SB (int Rs1, int Rs2, int Imm, int Funct3) {
 
-  uint32_t address_data = CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12);
+  uint32_t address_data = SIGNEXT(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12),8);
   uint32_t write = CURRENT_STATE.REGS[Rs2];
   write << 24;
   mem_write_32( address_data,  write);
@@ -218,7 +218,7 @@ int SB (int Rs1, int Rs2, int Imm, int Funct3) {
 
 int SH (int Rs1, int Rs2, int Imm, int Funct3) {
 
-  uint32_t address_data = CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12);
+  uint32_t address_data = SIGNEXT(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12),16);
   uint32_t write = CURRENT_STATE.REGS[Rs2];
   write << 16;
   mem_write_32( address_data,  write);
@@ -429,7 +429,7 @@ int JALR (int Rd, int Rs1, int Imm, int Funct3) {
 // J instruction
 //int JAL (char* i_);
 
-int JAL (int Rd, int Rs1, int Imm, int Funct3) {
+int JAL (int Rd, int Imm) {
 
     NEXT_STATE.REGS[Rd] = (CURRENT_STATE.PC+4);
     NEXT_STATE.PC = (CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,12));
