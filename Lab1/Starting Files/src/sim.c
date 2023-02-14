@@ -550,7 +550,7 @@ int u_process(char* i_) {
   }
 
   for(int i = 0; i < 20; i++) {
-    imm[i] = i_[31-12+i];
+    imm[i] = i_[31-31+i];
   }
 
   //for(int i = 0; i < 3; i++) {

@@ -20,10 +20,29 @@
 //   if no, just give number
 //   if yes, sign extend (e.g., 0x80_0000 -> 0xFF80_0000)
 //
-#define SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb))) ? ~((1 << (sb))-1) : 0))
+//#define SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb))) ? ~((1 << (sb))-1) : 0))
+#define SIGNEXT(v, sb) ((v) | (((v) & (1 << (sb-1))) ? ~((1 << (sb-1))-1) : 0))
 
-#define ZeroExtend(V) (0x00000000|(V))
+//#define ZeroExtend(V) (0x00000000|(V))
+int ZeroExtend(int v, int val){
+ if(val == 8){
+  int f = 0x000000FF & v;
+  return f;
+ }
+ else if(val == 5){
+  int f = 0x000001F & v;
+  return f;
+ }
+ else if(val == 16){
+  int f = 0x0000FFFF & v;
+  return f;
+ }
+  else if(val == 24){
+  int f = 0x00FFFFFF & v;
+  return f;
+ }
 
+}
 
 
 
@@ -97,7 +116,7 @@ int SLLI (int Rd, int Rs1, int Imm, int Funct3) {
 int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
   //figure out what zero extends means
   int cur = 0;
-  cur = ZeroExtend((CURRENT_STATE.REGS[Rs1] < SIGNEXT(Imm,12))?1:0);
+  cur = ZeroExtend((CURRENT_STATE.REGS[Rs1] < SIGNEXT(Imm,12))?1:0,8);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
   
@@ -106,9 +125,9 @@ int SLTIU (int Rd, int Rs1, int Imm, int Funct3) {
 int LB (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
-  uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
-  cur = mem_read_32(address_data) ;
-  NEXT_STATE.REGS[Rd] = cur;
+  //uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
+  cur = mem_read_32(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)) ;
+  NEXT_STATE.REGS[Rd] = (cur<<24)>>24;
   return 0;
   
 }
@@ -118,9 +137,9 @@ int LB (int Rd, int Rs1, int Imm, int Funct3) {
 int LH (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
-  uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),16);
-  cur = mem_read_32(address_data) ;
-  NEXT_STATE.REGS[Rd] = cur;
+  //uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
+  cur = mem_read_32(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)) ;
+  NEXT_STATE.REGS[Rd] = (cur<<16)>>16;
   return 0;
   
 }
@@ -128,9 +147,9 @@ int LH (int Rd, int Rs1, int Imm, int Funct3) {
 int LW (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
-  uint32_t address_data = (CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12));
-  cur = mem_read_32(address_data) ;
-  NEXT_STATE.REGS[Rd] = cur;
+  //uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
+  cur = mem_read_32(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)) ;
+  NEXT_STATE.REGS[Rd] = (cur<<16)>>16;
   return 0;
   
 }
@@ -138,9 +157,9 @@ int LW (int Rd, int Rs1, int Imm, int Funct3) {
 int LBU (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
-  uint32_t address_data =ZeroExtend(SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8));
-  cur = mem_read_32(address_data) ;
-  NEXT_STATE.REGS[Rd] = cur;
+  //uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
+  cur = mem_read_32(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)) ;
+  NEXT_STATE.REGS[Rd] = ZeroExtend((cur<<16)>>16,24);
   return 0;
   
 }
@@ -149,10 +168,11 @@ int LBU (int Rd, int Rs1, int Imm, int Funct3) {
 
 int LHU (int Rd, int Rs1, int Imm, int Funct3) {
 
+
   int cur = 0;
-  uint32_t address_data = ZeroExtend(SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),16));
-  cur = mem_read_32(address_data) ;
-  NEXT_STATE.REGS[Rd] = cur;
+  //uint32_t address_data = SIGNEXT((CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)),8);
+  cur = mem_read_32(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12)) ;
+  NEXT_STATE.REGS[Rd] = ZeroExtend((cur<<16)>>16,16);
   return 0;
   
 }
@@ -171,7 +191,7 @@ int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
   cur = (CURRENT_STATE.REGS[Rs1] >> SIGNEXT(Imm,5));
-  NEXT_STATE.REGS[Rd] = cur;
+  NEXT_STATE.REGS[Rd] = SIGNEXT(cur,27);
   return 0;
   
 }
@@ -184,7 +204,7 @@ int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
 int LUI (int Rd, int Imm) {
 
   int cur = 0;
-  cur = SIGNEXT(Imm,12)<<12;
+  cur = Imm<<12;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 
@@ -210,7 +230,7 @@ int SB (int Rs1, int Rs2, int Imm, int Funct3) {
 
   uint32_t address_data = SIGNEXT(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12),8);
   uint32_t write = CURRENT_STATE.REGS[Rs2];
-  write << 24;
+  write = write << 24;
   mem_write_32( address_data,  write);
   return 0;
   
@@ -220,7 +240,7 @@ int SH (int Rs1, int Rs2, int Imm, int Funct3) {
 
   uint32_t address_data = SIGNEXT(CURRENT_STATE.REGS[Rs1]+SIGNEXT(Imm,12),16);
   uint32_t write = CURRENT_STATE.REGS[Rs2];
-  write << 16;
+  write = write << 16;
   mem_write_32( address_data,  write);
   return 0;
   
@@ -294,7 +314,7 @@ int SLT (int Rd, int Rs1, int Rs2, int Funct3) {
 int SLTU (int Rd, int Rs1, int Rs2, int Funct3) {
 
   int cur = 0;
-  cur = ZeroExtend((CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0);
+  cur = ZeroExtend((CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0,8);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 
@@ -362,7 +382,7 @@ int BEQ (int Rs1, int Rs2, int Imm, int Funct3) {
 
   int cur = 0;
   Imm = Imm << 1;
-  if (CURRENT_STATE.REGS[Rs1] == CURRENT_STATE.REGS[Rs2])
+  if ((int) CURRENT_STATE.REGS[Rs1] == (int) CURRENT_STATE.REGS[Rs2])
     NEXT_STATE.PC = (CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,13));
   return 0;
 
@@ -393,7 +413,7 @@ int BLTU (int Rs1, int Rs2, int Imm, int Funct3) {
   int cur = 0;
   Imm = Imm << 1;
   if (CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = ZeroExtend((CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,13)));
+    NEXT_STATE.PC = ZeroExtend((CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,13)),8);
   return 0;
 
 }
@@ -403,7 +423,7 @@ int BGEU (int Rs1, int Rs2, int Imm, int Funct3) {
   int cur = 0;
   Imm = Imm << 1;
   if (CURRENT_STATE.REGS[Rs1] >= CURRENT_STATE.REGS[Rs2])
-    NEXT_STATE.PC = ZeroExtend((CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,13)));
+    NEXT_STATE.PC = ZeroExtend((CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,13)),8);
   return 0;
 
 }
@@ -418,7 +438,7 @@ int BGEU (int Rs1, int Rs2, int Imm, int Funct3) {
 int JALR (int Rd, int Rs1, int Imm, int Funct3) {
 
     NEXT_STATE.REGS[Rd] = (CURRENT_STATE.PC+4);
-    NEXT_STATE.PC = CURRENT_STATE.REGS[Rs1] + (SIGNEXT(Imm,12));
+    NEXT_STATE.PC = CURRENT_STATE.REGS[Rs1] + (SIGNEXT(Imm,12))-4;
 
   return 0;
 
