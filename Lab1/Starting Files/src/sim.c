@@ -401,7 +401,13 @@ int s_process(char* i_) {
   char rs1[6]; rs1[5] = '\0';
   char rs2[6]; rs2[5] = '\0';		     
   char funct3[4]; funct3[3] = '\0';
-  char imm[12]; imm[11] = '\0';
+  char imm[13]; imm[12] = '\0';
+  
+  for(int i = 0; i < 7; i++) {
+    imm[i] = i_[31-31+i];
+
+  }
+
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
     rs2[i] = i_[31-24+i];    
@@ -410,10 +416,6 @@ int s_process(char* i_) {
   // Old-fashioned method but works :)
   
   
-  for(int i = 0; i < 7; i++) {
-    imm[i] = i_[31-31+i];
-
-  }
 
 
   for(int i = 0; i < 3; i++) {
@@ -479,15 +481,15 @@ int j_process(char* i_) {
   //  imm[i] = i_[31-12+i];
   //}
   imm[0] = i_[31-31]; 
-  imm[1] = i_[31-20]; 
-  imm[2] = i_[31-19]; 
-  imm[3] = i_[31-18];
-  imm[4] = i_[31-17]; 
-  imm[5] = i_[31-16]; 
-  imm[6] = i_[31-15];
-  imm[7] = i_[31-14];
-  imm[8] = i_[31-13];
-  imm[9] = i_[31-12];
+  imm[1] = i_[31-19]; 
+  imm[2] = i_[31-18];
+  imm[3] = i_[31-17]; 
+  imm[4] = i_[31-16]; 
+  imm[5] = i_[31-15];
+  imm[6] = i_[31-14];
+  imm[7] = i_[31-13];
+  imm[8] = i_[31-12];
+  imm[9] = i_[31-20]; 
   imm[10] = i_[31-30];
   imm[11] = i_[31-29];
   imm[12] = i_[31-28];;  
@@ -542,7 +544,7 @@ int u_process(char* i_) {
   //char rs1[6]; rs1[5] = '\0';		   
   char rd[6]; rd[5] = '\0';
   //char funct3[4]; funct3[3] = '\0';
-  char imm[20]; imm[19] = '\0';
+  char imm[21]; imm[20] = '\0';
   
   for(int i = 0; i < 5; i++) {
   //  rs1[i] = i_[31-19+i];
