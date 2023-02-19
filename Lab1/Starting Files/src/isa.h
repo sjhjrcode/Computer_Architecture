@@ -142,6 +142,8 @@ int LH (int Rd, int Rs1, int Imm, int Funct3) {
   NEXT_STATE.REGS[Rd] = (cur<<16)>>16;
   return 0;
   
+  return 0;
+
 }
 
 int LW (int Rd, int Rs1, int Imm, int Funct3) {
@@ -213,7 +215,7 @@ int AUIPC (int Rd, int Imm) {
 
   int cur = 0;
   cur = (CURRENT_STATE.PC + 4) + (SIGNEXT(Imm,12)<<12);
-  NEXT_STATE.REGS[Rd] = cur;
+  NEXT_STATE.REGS[Rd] = cur-4;
   return 0;
 
 }
@@ -296,7 +298,7 @@ int SRL (int Rd, int Rs1, int Rs2, int Funct3) {
 int SRA (int Rd, int Rs1, int Rs2, int Funct3) {
 
   int cur = 0;
-  cur = SIGNEXT((CURRENT_STATE.REGS[Rs1] >> (CURRENT_STATE.REGS[Rs2]>>27)),5);
+  cur = SIGNEXT((CURRENT_STATE.REGS[Rs1] >> (CURRENT_STATE.REGS[Rs2])>>27),5);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 

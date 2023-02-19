@@ -403,19 +403,29 @@ int s_process(char* i_) {
   char funct3[4]; funct3[3] = '\0';
   char imm[13]; imm[12] = '\0';
   
-  for(int i = 0; i < 7; i++) {
-    imm[i] = i_[31-31+i];
+  //for(int i = 0; i < 7; i++) {
+  //  imm[i] = i_[31-31+i];
 
-  }
+ // }
 
   for(int i = 0; i < 5; i++) {
     rs1[i] = i_[31-19+i];
     rs2[i] = i_[31-24+i];    
-    imm[i] = i_[31-11+i];            
+    //imm[i] = i_[31-11+i];            
   }
   // Old-fashioned method but works :)
-  
-  
+  imm[0] = i_[31-31]; 
+  imm[1] = i_[31-30]; 
+  imm[2] = i_[31-29]; 
+  imm[3] = i_[31-28];
+  imm[4] = i_[31-27]; 
+  imm[5] = i_[31-26]; 
+  imm[6] = i_[31-25];
+  imm[7] = i_[31-11];
+  imm[8] = i_[31-10];
+  imm[9] = i_[31-9];
+  imm[10] = i_[31-8];
+  imm[11] = i_[31-7];
 
 
   for(int i = 0; i < 3; i++) {
