@@ -192,8 +192,8 @@ int SRLI (int Rd, int Rs1, int Imm, int Funct3) {
 int SRAI (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] >> SIGNEXT(Imm,5));
-  NEXT_STATE.REGS[Rd] = SIGNEXT(cur,27);
+  cur = ((int) CURRENT_STATE.REGS[Rs1] >> SIGNEXT(Imm,5));
+  NEXT_STATE.REGS[Rd] = cur;
   return 0;
   
 }
@@ -298,7 +298,7 @@ int SRL (int Rd, int Rs1, int Rs2, int Funct3) {
 int SRA (int Rd, int Rs1, int Rs2, int Funct3) {
 
   int cur = 0;
-  cur = SIGNEXT((CURRENT_STATE.REGS[Rs1] >> (CURRENT_STATE.REGS[Rs2])>>27),5);
+  cur = ((int) CURRENT_STATE.REGS[Rs1] >> ((int) CURRENT_STATE.REGS[Rs2]));
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 
