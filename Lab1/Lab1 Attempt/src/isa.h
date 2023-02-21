@@ -99,7 +99,7 @@ int ANDI (int Rd, int Rs1, int Imm, int Funct3) {
 int SLTI (int Rd, int Rs1, int Imm, int Funct3) {
 
   int cur = 0;
-  cur = (CURRENT_STATE.REGS[Rs1] < SIGNEXT(Imm,12))?1:0;
+  cur = ((int)CURRENT_STATE.REGS[Rs1] < SIGNEXT(Imm,12))?1:0;
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 }
@@ -307,7 +307,7 @@ int SRA (int Rd, int Rs1, int Rs2, int Funct3) {
 int SLT (int Rd, int Rs1, int Rs2, int Funct3) {
 
   int cur = 0;
-  cur = ((CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0);
+  cur = (((int)CURRENT_STATE.REGS[Rs1] < (int)CURRENT_STATE.REGS[Rs2])?1:0);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 
@@ -316,7 +316,7 @@ int SLT (int Rd, int Rs1, int Rs2, int Funct3) {
 int SLTU (int Rd, int Rs1, int Rs2, int Funct3) {
 
   int cur = 0;
-  cur = ZeroExtend((CURRENT_STATE.REGS[Rs1] < CURRENT_STATE.REGS[Rs2])?1:0,8);
+  cur = ZeroExtend(((int)CURRENT_STATE.REGS[Rs1] < (int)CURRENT_STATE.REGS[Rs2])?1:0,8);
   NEXT_STATE.REGS[Rd] = cur;
   return 0;
 
