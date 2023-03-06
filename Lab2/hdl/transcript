@@ -2,11 +2,12 @@
 # ** Warning: (vdel-134) Unable to remove locked optimized design "_opt".  Locker is stehowe@CEAT-ENDV350-01.
 # ** Warning: (vlib-34) Library already exists at "work".
 # Model Technology ModelSim - Intel FPGA Edition vlog 2020.1 Compiler 2020.02 Feb 28 2020
-# Start time: 16:24:35 on Feb 27,2023
+# Start time: 15:14:26 on Mar 06,2023
 # vlog -reportprogress 300 riscv_single.sv 
 # -- Compiling module testbench
 # -- Compiling module riscvsingle
 # -- Compiling module controller
+# -- Compiling module mux_branch
 # -- Compiling module maindec
 # -- Compiling module aludec
 # -- Compiling module datapath
@@ -25,10 +26,10 @@
 # Top level modules:
 # 	testbench
 # 	flopenr
-# End time: 16:24:35 on Feb 27,2023, Elapsed time: 0:00:00
+# End time: 15:14:26 on Mar 06,2023, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -debugdb -voptargs="+acc" work.testbench 
-# Start time: 16:24:35 on Feb 27,2023
+# Start time: 15:14:26 on Mar 06,2023
 # Loading sv_std.std
 # Loading work.testbench
 # Loading work.top
@@ -36,6 +37,7 @@
 # Loading work.controller
 # Loading work.maindec
 # Loading work.aludec
+# Loading work.mux_branch
 # Loading work.datapath
 # Loading work.flopr
 # Loading work.adder
@@ -46,15 +48,23 @@
 # Loading work.mux3
 # Loading work.imem
 # Loading work.dmem
+# ** Warning: (vsim-3015) [PCDPC] - Port size (8) does not match connection size (1) for port 'd0'. The port definition is at: riscv_single.sv(124).
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/dut/rv32single/c/MB File: riscv_single.sv Line: 119
+# ** Warning: (vsim-3015) [PCDPC] - Port size (8) does not match connection size (1) for port 'd1'. The port definition is at: riscv_single.sv(124).
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/dut/rv32single/c/MB File: riscv_single.sv Line: 119
+# ** Warning: (vsim-3015) [PCDPC] - Port size (8) does not match connection size (1) for port 'd2'. The port definition is at: riscv_single.sv(124).
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/dut/rv32single/c/MB File: riscv_single.sv Line: 119
+# ** Warning: (vsim-3015) [PCDPC] - Port size (8) does not match connection size (1) for port 'd3'. The port definition is at: riscv_single.sv(124).
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/dut/rv32single/c/MB File: riscv_single.sv Line: 119
+# ** Warning: (vsim-3015) [PCDPC] - Port size (1) does not match connection size (3) for port 's'. The port definition is at: riscv_single.sv(125).
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/dut/rv32single/c/MB File: riscv_single.sv Line: 119
+# ** Warning: (vsim-3015) [PCDPC] - Port size (8) does not match connection size (1) for port 'y'. The port definition is at: riscv_single.sv(126).
+#    Time: 0 ps  Iteration: 0  Instance: /testbench/dut/rv32single/c/MB File: riscv_single.sv Line: 119
 # ** Note: (vsim-8716) Reusing existing debug database vsim.dbg.
-# Simulation failed
-# ** Note: $stop    : riscv_single.sv(69)
-#    Time: 215 ps  Iteration: 1  Instance: /testbench
-# Break in Module testbench at riscv_single.sv line 69
 # ** Error: add: bad option "schematic": must be dataflow, list, log, memory, message, testbrowser, watch, wave
 # Error in macro ./riscv_single.do line 86
 # add: bad option "schematic": must be dataflow, list, log, memory, message, testbrowser, watch, wave
 #     while executing
 # "add schematic -full sim:/testbench/dut/rv32single"
-# End time: 16:25:18 on Feb 27,2023, Elapsed time: 0:00:43
-# Errors: 1, Warnings: 0
+# End time: 15:14:44 on Mar 06,2023, Elapsed time: 0:00:18
+# Errors: 1, Warnings: 6
