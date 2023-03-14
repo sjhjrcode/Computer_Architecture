@@ -41,7 +41,7 @@ module testbench();
    initial
      begin
 	string memfilename;
-        memfilename = {"../testing/or.memfile"};
+        memfilename = {"../testing/beq.memfile"};
         $readmemh(memfilename, dut.imem.RAM);
      end
 
@@ -100,9 +100,9 @@ module controller (input  logic [6:0] op,
 		   input  logic [2:0] funct3,
 		   input  logic       funct7b5,
 		   input  logic       Zero,
-       input logic v,  // overflow
-       input logic neg,
-       input logic carry,
+       input  logic       v,  // overflow
+       input  logic       neg,
+       input  logic       carry,
 		   output logic [1:0] ResultSrc,
 		   output logic       MemWrite,
 		   output logic       PCSrc,
@@ -113,7 +113,7 @@ module controller (input  logic [6:0] op,
    
    logic [1:0] 			      ALUOp;
    logic 			      Branch;
-   logic 			      PCSrc_1,PCSrc_2,PCSrc_3,PCSrc_4;
+   //logic 			      PCSrc_1,PCSrc_2,PCSrc_3,PCSrc_4;
    maindec md (op, ResultSrc, MemWrite, Branch,
 	       ALUSrc, RegWrite, Jump, ImmSrc, ALUOp);
    aludec ad (op[5], funct3, funct7b5, ALUOp, ALUControl);
@@ -122,12 +122,15 @@ module controller (input  logic [6:0] op,
    //assign PCSrc_3 = Branch ^ Zero | Jump;//blt
    //assign PCSrc_4 = Branch >= Zero | Jump;//bge
    //mux_branch MB(PCSrc_1,PCSrc_2,PCSrc_3,PCSrc_4,funct3,PCSrc);
-  assign PCSrc = Branch & ((Zero^funct3[0])|(neg^v)|(Zero|(neg^v))|~Zero|~carry|(~Zero&~(neg^v))|~(neg^v)|(Zero|~carry)|(~Zero&carry)) | Jump; 
+   //assign PCSrc = Branch & Zero | Jump;
+   assign PCSrc = Branch & (Zero ^ funct3[0]) | Jump;
+   //assign PCSrc = Branch & ((Zero^funct3[0])|(neg^v)|(Zero|(neg^v))|~Zero|~carry|(~Zero&~(neg^v))|~(neg^v)|(Zero|~carry)|(~Zero&carry)) | Jump; 
+  
   //assign PCSrc = Branch & ((Zero^funct3[0])) | Jump; 
 
 endmodule // controller
 
-
+/*
 module mux_branch #(parameter WIDTH = 8)
    (input  logic [WIDTH-1:0] d0, d1,d2,d3,
     input logic 	     s,
@@ -142,7 +145,7 @@ module mux_branch #(parameter WIDTH = 8)
     endcase 
    
 endmodule // mux_branch
-
+*/
 
 
 module maindec (input  logic [6:0] op,
@@ -167,7 +170,7 @@ module maindec (input  logic [6:0] op,
        7'b1100011: controls = 12'b0_010_0_0_00_1_01_0; // beq
        7'b0010011: controls = 12'b1_000_1_0_00_0_10_0; // I–type ALU
        7'b1101111: controls = 12'b1_011_0_0_10_0_00_1; // jal
-       7'b0110111: controls = 12'b1_100_0_0_00_0_00_0; // lui
+       //7'b0110111: controls = 12'b1_100_0_0_00_0_00_0; // lui
        default: controls = 11'bx_xx_x_x_xx_x_xx_x; // ???
      endcase // case (op)
    
@@ -185,20 +188,20 @@ module aludec (input  logic       opb5,
    always_comb
      case(ALUOp)
        2'b00: ALUControl = 4'b0000; // addition
-       2'b01: ALUControl = 4'b0010; // subtraction
+       2'b01: ALUControl = 4'b0001; // subtraction
        default: case(funct3) // R–type or I–type ALU
 		  3'b000: if (RtypeSub)
-		    ALUControl = 4'b0010; // sub
+		    ALUControl = 4'b0001; // sub
 		  else
 		    ALUControl = 4'b0000; // add, addi
-		  3'b010: ALUControl = 4'b1010; // slt, slti
-		  3'b110: ALUControl = 4'b0110; // or, ori
-		  3'b111: ALUControl = 4'b0100; // and, andi
-      3'b011: ALUControl = 4'b1100; // xor
-      3'b001: ALUControl = 4'b1110; // SLL
-      3'b100: ALUControl = 4'b0111; // SRA comeback
-      3'b101: ALUControl = 4'b0011; // SRL
-		  default: ALUControl = 4'bxxxx; // ???
+		  3'b010: ALUControl = 4'b0101; // slt, slti
+		  3'b110: ALUControl = 4'b0011; // or, ori
+		  3'b111: ALUControl = 4'b0010; // and, andi
+      3'b011: ALUControl = 4'b0110; // xor
+      3'b001: ALUControl = 4'b0111; // SLL
+      3'b100: ALUControl = 4'b1110; // SRA comeback
+      3'b101: ALUControl = 4'b1010; // SRL
+      default: ALUControl = 4'bxxxx; // ???
 		endcase // case (funct3)       
      endcase // case (ALUOp)
    
@@ -211,9 +214,9 @@ module datapath (input  logic        clk, reset,
 		 input  logic [1:0]  ImmSrc,
 		 input  logic [3:0]  ALUControl,
 		 output logic 	     Zero,
-     output logic v,  // overflow
-     output logic neg,
-     output logic carry,
+     output logic        v,  // overflow
+     output logic        neg,
+     output logic        carry,
 		 output logic [31:0] PC,
 		 input  logic [31:0] Instr,
 		 output logic [31:0] ALUResult, WriteData,
@@ -253,6 +256,7 @@ module extend (input  logic [31:7] instr,
    
    always_comb
      case(immsrc)
+     /*
        // I−type
        3'b000:  immext = {{20{instr[31]}}, instr[31:20]};
        // S−type (stores)
@@ -263,6 +267,15 @@ module extend (input  logic [31:7] instr,
        3'b011:  immext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
        // U-type 
        3'b100: immext = {instr[31],instr[30:12],{12{1'b0}}};
+       */
+              // I−type
+       2'b00:  immext = {{20{instr[31]}}, instr[31:20]};
+       // S−type (stores)
+       2'b01:  immext = {{20{instr[31]}}, instr[31:25], instr[11:7]};
+       // B−type (branches)
+       2'b10:  immext = {{20{instr[31]}}, instr[7], instr[30:25], instr[11:8], 1'b0};       
+       // J−type (jal)
+       2'b11:  immext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
        default: immext = 32'bx; // undefined
      endcase // case (immsrc)
    
@@ -366,14 +379,14 @@ module alu (input  logic [31:0] a, b,
    always_comb
      case (alucontrol)
        4'b0000:  result = sum;         // add, addi
-       4'b0010:  result = sum;         // subtract
-       4'b0100:  result = a & b;       // and, andi
-       4'b0110:  result = a | b;       // or
-       4'b1010:  result = sum[31] ^ v; // slt
-       4'b1100:  result = a ^ b; // xor     
-       4'b1110:  result = a << b[4:0]; // sll
-       4'b0111:  result = a >> b[4:0]; // srl
-       4'b0011:  result = a >>> b[4:0]; // sra        
+       4'b0001:  result = sum;         // subtract
+       4'b0010:  result = a & b;       // and, andi
+       4'b0011:  result = a | b;       // or
+       4'b0101:  result = sum[31] ^ v; // slt
+       4'b0110:  result = a ^ b; // xor     
+       4'b0111:  result = a << b[4:0]; // sll
+       4'b1001:  result = a >> b[4:0]; // sra
+       4'b1011:  result = a >>> b[4:0]; // srl             
        default: result = 32'bx;
      endcase
   
