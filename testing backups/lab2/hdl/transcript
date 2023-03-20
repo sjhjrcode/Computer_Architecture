@@ -16,7 +16,7 @@
 # ** Warning: (vlib-34) Library already exists at "work".
 # Errors: 0, Warnings: 1
 # Model Technology ModelSim SE vlog 2021.3 Compiler 2021.07 Jul 13 2021
-# Start time: 21:33:05 on Mar 19,2023
+# Start time: 13:16:27 on Mar 20,2023
 # vlog -reportprogress 300 riscv_single.sv 
 # -- Compiling module testbench
 # -- Compiling module riscvsingle
@@ -39,13 +39,13 @@
 # Top level modules:
 # 	testbench
 # 	flopenr
-# End time: 21:33:05 on Mar 19,2023, Elapsed time: 0:00:00
+# End time: 13:16:27 on Mar 20,2023, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -debugdb -voptargs="+acc" work.testbench 
-# Start time: 21:33:05 on Mar 19,2023
+# Start time: 13:16:27 on Mar 20,2023
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Note: (vsim-8611) Generating debug db.
-# ** Note: (vopt-4301) Memory core inferred for signal 'RAM' width=32, depth=256, type=RAM at location riscv_single.sv:319
+# ** Note: (vopt-4301) Memory core inferred for signal 'RAM' width=32, depth=256, type=RAM at location riscv_single.sv:328
 # Loading sv_std.std
 # Loading work.testbench(fast)
 # Loading work.top(fast)
@@ -63,6 +63,10 @@
 # Loading work.mux3(fast)
 # Loading work.imem(fast)
 # Loading work.dmem(fast)
+# ** Warning: (vsim-3015) [PCDPC] - Port size (2) does not match connection size (3) for port 'ResultSrc'. The port definition is at: riscv_single.sv(108).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/dut/rv32single/c File: riscv_single.sv Line: 86
+# ** Warning: (vsim-3015) [PCDPC] - Port size (2) does not match connection size (3) for port 'ResultSrc'. The port definition is at: riscv_single.sv(194).
+#    Time: 0 ns  Iteration: 0  Instance: /testbench/dut/rv32single/dp File: riscv_single.sv Line: 90
 # ** Note: (vsim-8900) Creating design debug database vsim.dbg.
-# End time: 21:33:29 on Mar 19,2023, Elapsed time: 0:00:24
-# Errors: 0, Warnings: 0
+# End time: 13:16:46 on Mar 20,2023, Elapsed time: 0:00:19
+# Errors: 0, Warnings: 2

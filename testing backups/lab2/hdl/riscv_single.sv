@@ -80,7 +80,7 @@ module riscvsingle (input  logic        clk, reset,
 		    input  logic [31:0] ReadData);
    
    logic 				ALUSrc, RegWrite, Jump, Zero,equal,nequal,less,lessu,greate,greateu;
-   logic [1:0] 				ResultSrc, ImmSrc;
+   logic [2:0] 				ResultSrc, ImmSrc;
    logic [2:0] 				ALUControl;
    
    controller c (Instr[6:0], Instr[14:12], Instr[30], Zero,equal,nequal,less,lessu,greate,greateu,
@@ -109,7 +109,7 @@ module controller (input  logic [6:0] op,
 		   output logic       MemWrite,
 		   output logic       PCSrc, ALUSrc,
 		   output logic       RegWrite, Jump,
-		   output logic [1:0] ImmSrc,
+		   output logic [2:0] ImmSrc,
 		   output logic [2:0] ALUControl);
    
    logic [1:0] 			      ALUOp;
@@ -128,10 +128,10 @@ module maindec (input  logic [6:0] op,
 		output logic 	   MemWrite,
 		output logic 	   Branch, ALUSrc,
 		output logic 	   RegWrite, Jump,
-		output logic [1:0] ImmSrc,
+		output logic [2:0] ImmSrc,
 		output logic [1:0] ALUOp);
    
-   logic [10:0] 		   controls;
+   logic [11:0] 		   controls;
    
    assign {RegWrite, ImmSrc, ALUSrc, MemWrite,
 	   ResultSrc, Branch, ALUOp, Jump} = controls;
@@ -139,14 +139,14 @@ module maindec (input  logic [6:0] op,
    always_comb
      case(op)
        // RegWrite_ImmSrc_ALUSrc_MemWrite_ResultSrc_Branch_ALUOp_Jump
-       7'b0000011: controls = 11'b1_00_1_0_01_0_00_0; // lw
-       7'b0100011: controls = 11'b0_01_1_1_00_0_00_0; // sw
-       7'b0110011: controls = 11'b1_xx_0_0_00_0_10_0; // R–type
-       7'b1100011: controls = 11'b0_10_0_0_00_1_01_0; // beq
-       7'b0010011: controls = 11'b1_00_1_0_00_0_10_0; // I–type ALU
-       7'b1101111: controls = 11'b1_11_0_0_10_0_00_1; // jal
-       7'b0110111: controls = 12'b1_100_0_0_00_0_11_0; // lui
-       default: controls = 11'bx_xx_x_x_xx_x_xx_x; // ???
+       7'b0000011: controls = 12'b1_000_1_0_01_0_00_0; // lw
+       7'b0100011: controls = 12'b0_001_1_1_00_0_00_0; // sw
+       7'b0110011: controls = 12'b1_xxx_0_0_00_0_10_0; // R–type
+       7'b1100011: controls = 12'b0_010_0_0_00_1_01_0; // beq
+       7'b0010011: controls = 12'b1_000_1_0_00_0_10_0; // I–type ALU
+       7'b1101111: controls = 12'b1_011_0_0_10_0_00_1; // jal
+       7'b0110111: controls = 12'b1_100_1_0_00_0_00_0; // lui
+       default: controls = 12'bx_xxx_x_x_xx_x_xx_x; // ???
      endcase // case (op)
    
 endmodule // maindec
@@ -169,16 +169,24 @@ module aludec (input  logic       opb5,
 		    ALUControl = 4'b0001; // sub
 		  else
 		    ALUControl = 4'b0000; // add, addi
+        
 		  3'b010: ALUControl = 4'b0101; // slt, slti
 		  3'b110: ALUControl = 4'b0011; // or, ori
 		  3'b111: ALUControl = 4'b0010; // and, andi
       3'b011: ALUControl = 4'b0110; // xor
       3'b001: ALUControl = 4'b0111; // SLL
       3'b100: ALUControl = 4'b1110; // SRA comeback
-      3'b101: ALUControl = 4'b1010; // SRL
+      //3'b101: ALUControl = 4'b1010; // SRL
+      3'b101: begin
+            if(funct7b5)
+              ALUControl = 4'b1000; // sra, srai
+            else
+              ALUControl = 4'b1111; // srl, srli
+          end
+
       default: ALUControl = 4'bxxxx; // ???
 		endcase // case (funct3)       
-     endcase // case (ALUOp)
+  endcase // case (ALUOp)
    
 endmodule // aludec
 
@@ -186,7 +194,7 @@ module datapath (input  logic        clk, reset,
 		 input  logic [1:0]  ResultSrc,
 		 input  logic 	     PCSrc, ALUSrc,
 		 input  logic 	     RegWrite,
-		 input  logic [1:0]  ImmSrc,
+		 input  logic [2:0]  ImmSrc,
 		 input  logic [2:0]  ALUControl,
 		 output logic 	     Zero,
      output logic  equal,
@@ -229,7 +237,7 @@ module adder (input  logic [31:0] a, b,
 endmodule
 
 module extend (input  logic [31:7] instr,
-	       input  logic [1:0]  immsrc,
+	       input  logic [2:0]  immsrc,
 	       output logic [31:0] immext);
    
    always_comb
@@ -243,7 +251,8 @@ module extend (input  logic [31:7] instr,
        // J−type (jal)
        3'b011:  immext = {{12{instr[31]}}, instr[19:12], instr[20], instr[30:21], 1'b0};
        // U-type 
-       3'b100: immext = {instr[31],instr[30:12],{12{1'b0}}};
+       //3'b100: immext = {instr[31],instr[31:12] << 12};
+       3'b100: immext = {instr[31:12],12'b0};
        default: immext = 32'bx; // undefined
      endcase // case (immsrc)
    
@@ -306,7 +315,7 @@ endmodule // top
 module imem (input  logic [31:0] a,
 	     output logic [31:0] rd);
    
-   logic [31:0] 		 RAM[63:0];
+   logic [31:0] 		 RAM[255:0];
    
    assign rd = RAM[a[31:2]]; // word aligned
    
@@ -354,8 +363,8 @@ module alu (input  logic [31:0] a, b,
        4'b0101:  result = sum[31] ^ v; // slt
        4'b0110:  result = a ^ b; // xor     
        4'b0111:  result = a << b[4:0]; // sll
-       4'b1001:  result = a >> b[4:0]; // sra
-       4'b1011:  result = a >>> b[4:0]; // srl     
+       4'b1000:  result = a >> b[4:0]; // sra
+       4'b1111:  result = $signed(a) >>> b[4:0]; // srl
        default: result = 32'bx;
      endcase
 
