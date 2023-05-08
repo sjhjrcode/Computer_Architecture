@@ -1198,6 +1198,8 @@ module top(input  logic        clk, reset,
    
 endmodule
 
+
+
 module riscv(input  logic        clk, reset,
              output logic [31:0] PCF,
              input logic [31:0]  InstrF,
@@ -1241,6 +1243,7 @@ module riscv(input  logic        clk, reset,
               PCSrcE, ResultSrcEb0, RegWriteM, RegWriteW,
               ForwardAE, ForwardBE, StallF, StallD, FlushD, FlushE);			 
 endmodule
+
 
 
 

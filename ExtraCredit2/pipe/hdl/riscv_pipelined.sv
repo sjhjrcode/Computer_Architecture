@@ -77,6 +77,25 @@
 //   lw	          0000011   010       immediate
 //   sw           0100011   010       immediate
 //   jal          1101111   immediate immediate
+//   srl          0110011   101       0000000
+//   bge          1100011   101       immediate **
+//   bne          1100011   001       immediate **
+//   blt          1100011   100       immediate **
+//   xori         0010011   100       immediate **
+//   auipc        0010111   ---       ---       **
+//   sra          0110011   101       0100000   **
+//   srai         0010011   101       0100000   **
+//   slli         0010011   001       0000000   **
+//   srli         0010011   101       0000000   **
+//   jalr         1100111   000       immedtiate 
+
+
+//Not done***
+//unsigned***
+//bltu
+//bgeu
+//sltiu
+//sltu
 
 module testbench();
 
@@ -256,8 +275,13 @@ module maindec(input  logic [6:0] op,
        7'b0100011: controls = 11'b0_01_1_1_00_0_00_0; // sw
        7'b0110011: controls = 11'b1_xx_0_0_00_0_10_0; // R-type 
        7'b1100011: controls = 11'b0_10_0_0_00_1_01_0; // beq
+       7'b1100011: controls = 11'b1_10_0_0_00_1_01_1; // bge**
+       7'b1100011: controls = 11'b0_10_0_0_01_0_01_0; // bne**
+       7'b1100011: controls = 11'b1_10_0_0_00_0_10_0; // blt**
        7'b0010011: controls = 11'b1_00_1_0_00_0_10_0; // I-type ALU
        7'b1101111: controls = 11'b1_11_0_0_10_0_00_1; // jal
+       7'b1100111: controls = 11'b1_01_1_0_00_0_00_0; // jalr ***
+       7'b0010111: controls = 11'b1_00_0_1_00_0_00_0; // auipc ****
        7'b0000000: controls = 11'b0_00_0_0_00_0_00_0; // need valid values at reset
        default:    controls = 11'bx_xx_x_x_xx_x_xx_x; // non-implemented instruction
      endcase
@@ -265,30 +289,70 @@ endmodule
 
 module aludec(input  logic       opb5,
               input logic [2:0]  funct3,
-              input logic 	 funct7b5, 
+              input logic       funct7b5, 
               input logic [1:0]  ALUOp,
               output logic [2:0] ALUControl);
 
-   logic 			 RtypeSub;
+   logic        RtypeSub;
+   logic        un = 0; // declare and assign unsigned as a local variable
+   
    assign RtypeSub = funct7b5 & opb5;  // TRUE for R-type subtract instruction
-
-   always_comb
+   
+   always_comb 
      case(ALUOp)
-       2'b00:                ALUControl = 3'b000; // addition
-       2'b01:                ALUControl = 3'b001; // subtraction
+       2'b00:        ALUControl = 3'b000; // addition
+       2'b01:        ALUControl = 3'b001; // subtraction
+       2'b11: case(funct3[2:1]) // branch commands
+                  2'b00: ALUControl = 3'b110; // beq
+                  2'b01: ALUControl = 3'b111; // bne**
+                  2'b10: ALUControl = 3'b100; // blt**
+                  2'b11: ALUControl = 3'b101; // bge**
+                  default: ALUControl = 3'bxxx; // ???
+               endcase
        default: case(funct3) // R-type or I-type ALU
-                  3'b000:  if (RtypeSub) 
-                    ALUControl = 3'b001; // sub
-                  else          
-                    ALUControl = 3'b000; // add, addi
-                  3'b010:    ALUControl = 3'b101; // slt, slti
-                  3'b110:    ALUControl = 3'b011; // or, ori
-                  3'b111:    ALUControl = 3'b010; // and, andi
-                  default:   ALUControl = 3'bxxx; // ???
-		endcase
+                  3'b000: if (RtypeSub) 
+                           ALUControl = 3'b001; // sub
+                         else          
+                           ALUControl = 3'b000; // add, addi
+                  3'b001: ALUControl = 3'b010; // sll, slli **
+                  3'b010: ALUControl = 3'b101; // slt, slti
+                  3'b011: ALUControl = 3'b011; // srl, srli **
+                  3'b101: if (un) 
+                           ALUControl = 3'b010; // sra, srai **
+                  3'b110: ALUControl = 3'b011; // or, ori
+                  3'b111: ALUControl = 3'b010; // and, andi
+                  3'b100: ALUControl = 3'b100; // xor, xori **
+                  default: ALUControl = 3'bxxx; // ???
+     endcase
+    endcase
+endmodule
+
+
+/*   always_comb
+  case(ALUOp)
+    2'b00:        ALUControl = 3'b000; // addition
+    2'b01:        ALUControl = 3'b001; // subtraction
+    default: case(funct3) // R-type or I-type ALU
+               3'b000: if (RtypeSub) 
+                        ALUControl = 3'b001; // sub
+                      else          
+                        ALUControl = 3'b000; // add, addi
+               3'b001: ALUControl = 3'b010; // sll, slli
+               3'b010: ALUControl = 3'b101; // slt, slti
+               3'b011: ALUControl = 3'b011; // srl, srli
+               3'b101: if (signed) 
+                        ALUControl = 3'b111; // sra, srai
+               3'b110: ALUControl = 3'b011; // or, ori
+               3'b111: ALUControl = 3'b010; // and, andi
+               3'b100: ALUControl = 3'b100; // xor, xori
+               default: ALUControl = 3'bxxx; // ???
+  endcase
      endcase
 endmodule
 
+//possible solution for unsigned***
+
+*/
 module datapath(input logic clk, reset,
                 // Fetch stage signals
                 input logic 	    StallF,
@@ -560,7 +624,7 @@ module alu(input  logic [31:0] a, b,
      case (alucontrol)
        3'b000:  result = sum;         // add
        3'b001:  result = sum;         // subtract
-       3'b010:  result = a & b;        // and
+       3'b010:  result = a & b;       // and
        3'b011:  result = a | b;       // or
        3'b100:  result = a ^ b;       // xor
        3'b101:  result = sum[31] ^ v; // slt
@@ -569,65 +633,8 @@ module alu(input  logic [31:0] a, b,
        default: result = 32'bx;
      endcase
 
-   assign zero = (result == 32'b0);
-   assign v = ~(alucontrol[0] ^ a[31] ^ b[31]) & (a[31] ^ sum[31]) & isAddSub;
+   assign zero = (result == 32'b0);//These are flags but i dont know how to use them
+   assign v = ~(alucontrol[0] ^ a[31] ^ b[31]) & (a[31] ^ sum[31]) & isAddSub;//second flag from lecture
    
 endmodule
 
-
-
-module shifter (
-  input  logic [`XLEN-1:0]     A,                             // shift Source
-  input  logic [`LOG_XLEN-1:0] Amt,                           // Shift amount
-  input  logic                 Right, Rotate, W64, SubArith,  // Shift right, rotate, W64-type operation, arithmetic shift
-  output logic [`XLEN-1:0]     Y);                            // Shifted result
-
-  logic [2*`XLEN-2:0]          Z, ZShift;                     // Input to funnel shifter, shifted amount before truncated to 32 or 64 bits
-  logic [`LOG_XLEN-1:0]        TruncAmt, Offset;              // Shift amount adjusted for RV64, right-shift amount
-  logic                        Sign;                          // Sign bit for sign extension
-
-  assign Sign = A[`XLEN-1] & SubArith;  // sign bit for sign extension
-  if (`XLEN==32) begin // rv32
-    if (`ZBB_SUPPORTED) begin: rotfunnel32 //rv32 shifter with rotates
-      always_comb  // funnel mux
-        case({Right, Rotate})
-          2'b00: Z = {A[31:0], 31'b0};
-          2'b01: Z = {A[31:0], A[31:1]};
-          2'b10: Z = {{31{Sign}}, A[31:0]};
-          2'b11: Z = {A[30:0], A[31:0]};
-        endcase
-    end else begin: norotfunnel32 //rv32 shifter without rotates
-      always_comb  // funnel mux
-        if (Right)  Z = {{31{Sign}}, A[31:0]};
-        else        Z = {A[31:0], 31'b0};
-    end
-    assign TruncAmt = Amt; // shift amount
-  end else begin // rv64
-    logic [`XLEN-1:0]         A64;                            
-    mux3 #(64) extendmux({{32{1'b0}}, A[31:0]}, {{32{A[31]}}, A[31:0]}, A, {~W64, SubArith}, A64); // bottom 32 bits are always A[31:0], so effectively a 32-bit upper mux
-    if (`ZBB_SUPPORTED) begin: rotfunnel64 // rv64 shifter with rotates
-      // shifter rotate source select mux
-      logic [`XLEN-1:0]   RotA;                          // rotate source
-      mux2 #(`XLEN) rotmux(A, {A[31:0], A[31:0]}, W64, RotA); // W64 rotatons
-      always_comb  // funnel mux
-        case ({Right, Rotate})
-          2'b00: Z = {A64[63:0],{63'b0}};
-          2'b01: Z = {RotA[63:0], RotA[63:1]};
-          2'b10: Z = {{63{Sign}}, A64[63:0]};
-          2'b11: Z = {RotA[62:0], RotA[63:0]};
-        endcase
-    end else begin: norotfunnel64 // rv64 shifter without rotates
-      always_comb  // funnel mux
-        if (Right)  Z = {{63{Sign}}, A64[63:0]};
-        else        Z = {A64[63:0], {63'b0}};
-    end
-    assign TruncAmt = W64 ? {1'b0, Amt[4:0]} : Amt; // 32- or 64-bit shift
-  end
-  
-  // Opposite offset for right shifts
-  assign Offset = Right ? TruncAmt : ~TruncAmt;
-  
-  // Funnel operation
-  assign ZShift = Z >> Offset;
-  assign Y = ZShift[`XLEN-1:0];    
-endmodule
