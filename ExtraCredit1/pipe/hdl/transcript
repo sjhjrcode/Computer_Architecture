@@ -16,7 +16,7 @@
 # ** Warning: (vlib-34) Library already exists at "work".
 # Errors: 0, Warnings: 1
 # Model Technology ModelSim SE vlog 2021.3 Compiler 2021.07 Jul 13 2021
-# Start time: 20:32:23 on May 07,2023
+# Start time: 20:58:08 on May 07,2023
 # vlog -reportprogress 300 riscv_pipelined.sv 
 # -- Compiling module testbench
 # -- Compiling module top
@@ -47,10 +47,10 @@
 # 
 # Top level modules:
 # 	testbench
-# End time: 20:32:24 on May 07,2023, Elapsed time: 0:00:01
+# End time: 20:58:08 on May 07,2023, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -debugdb -voptargs="+acc" work.testbench 
-# Start time: 20:32:24 on May 07,2023
+# Start time: 20:58:08 on May 07,2023
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Note: (vsim-8611) Generating debug db.
 # ** Note: (vopt-4301) Memory core inferred for signal 'mem' width=2, depth=1024, type=RAM at location riscv_pipelined.sv:1173
@@ -129,5 +129,5 @@
 # ** Note: $stop    : riscv_pipelined.sv(398)
 #    Time: 275 ns  Iteration: 1  Instance: /testbench
 # Break in Module testbench at riscv_pipelined.sv line 398
-# End time: 20:38:51 on May 07,2023, Elapsed time: 0:06:27
+# End time: 21:38:38 on May 07,2023, Elapsed time: 0:40:30
 # Errors: 0, Warnings: 17

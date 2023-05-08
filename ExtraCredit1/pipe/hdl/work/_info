@@ -4,6 +4,8 @@ z2
 Z0 !s99 nomlopt
 R0
 R0
+R0
+R0
 !s11f MIXED_VERSIONS
 R0
 R0
@@ -44,10 +46,10 @@ n@_opt
 OL;O;2021.3_1;73
 R1
 T_opt1
-Z6 !s110 1683509544
-VX]L1NZiOeKi2Y=[^bM><k3
+Z6 !s110 1683511088
+V6W;ZbQdN0oQQ2DINLMXgo0
 R2
-=1-000ae431a4f1-64585128-2542c-33c8ee
+=1-000ae431a4f1-64585730-bba58-33e578
 R3
 R4
 R5
@@ -61,7 +63,7 @@ R6
 IlkIhU?G@foF2hoY19[4Xz2
 S1
 Z8 d/home/sjhjrok/MEGA/School/Computer_Architecture/ExtraCredit1/pipe/hdl
-Z9 w1683509500
+Z9 w1683511070
 Z10 8riscv_pipelined.sv
 Z11 Friscv_pipelined.sv
 !i122 0
@@ -71,7 +73,7 @@ Z13 OE;L;2021.3;73
 r1
 !s85 0
 31
-Z14 !s108 1683509543.000000
+Z14 !s108 1683511088.000000
 Z15 !s107 riscv_pipelined.sv|
 Z16 !s90 -reportprogress|300|riscv_pipelined.sv|
 !i113 0
